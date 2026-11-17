@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "rappels",
+    "name": "Rappels",
     "slug": "rappels",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -11,15 +11,46 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#1D6B62",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "fr.chavard.rappels",
+      "versionCode": 1,
+      "permissions": [
+        "USE_EXACT_ALARM",
+        "RECORD_AUDIO",
+        "POST_NOTIFICATIONS",
+        "RECEIVE_BOOT_COMPLETED"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "@react-native-community/datetimepicker",
+      "expo-font",
+      [
+        "expo-notifications",
+        {
+          "color": "#1D6B62",
+          "defaultChannel": "rappels"
+        }
+      ],
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Le micro sert à dicter tes rappels.",
+          "speechRecognitionPermission": "La reconnaissance vocale transforme ta voix en rappel.",
+          "androidSpeechServicePackages": [
+            "com.google.android.googlequicksearchbox",
+            "com.google.android.as"
+          ]
+        }
+      ]
+    ],
+    "backgroundColor": "#F1F4F3"
   }
 }
