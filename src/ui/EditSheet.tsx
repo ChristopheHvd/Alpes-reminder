@@ -57,6 +57,7 @@ function EditBody({ target, slots, onSave, onDelete }: Props & { target: EditTar
   const [listening, setListening] = useState(false);
   const [micError, setMicError] = useState('');
   const input = useRef<TextInputInstance>(null);
+  const heard = useRef('');
 
   async function startListening() {
     const perm = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
@@ -86,9 +87,17 @@ function EditBody({ target, slots, onSave, onDelete }: Props & { target: EditTar
 
   useSpeechRecognitionEvent('result', (e) => {
     const t = e.results[0]?.transcript ?? '';
+    heard.current = t;
     applyText(t);
   });
-  useSpeechRecognitionEvent('end', () => setListening(false));
+  useSpeechRecognitionEvent('end', () => {
+    setListening(false);
+    // Dictation adds the reminder straight away; the sheet stays open only if nothing usable was heard.
+    if (target.mode !== 'voice' || !heard.current.trim()) return;
+    const d = parse(heard.current, slots, Date.now());
+    heard.current = '';
+    if (d.title) onSave(d);
+  });
   useSpeechRecognitionEvent('error', (e) => {
     setListening(false);
     if (e.error !== 'no-speech' && e.error !== 'aborted') setMicError("Je n'ai pas compris. Réessaie ou écris.");

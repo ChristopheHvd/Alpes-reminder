@@ -127,3 +127,13 @@ describe('parse', () => {
     expect(repeatLabel({ kind: 'weekdays', days: [1, 2, 3, 4, 5] })).toBe('En semaine');
   });
 });
+
+describe('voice phrasing', () => {
+  it.each(["rappelle moi d'acheter la pièce de lave-vaisselle ce soir", 'Rappelle-moi d’acheter la pièce de lave-vaisselle ce soir'])('%s', (t) => {
+    const p = parse(t, DEFAULT_SLOTS, NOW);
+    expect(p.title).toBe('Acheter la pièce de lave-vaisselle');
+    expect(p.time).toBe('19:00');
+    expect(p.day.getTime()).toBe(new Date(2026, 10, 17).getTime());
+    expect(p.repeat).toBe('once');
+  });
+});

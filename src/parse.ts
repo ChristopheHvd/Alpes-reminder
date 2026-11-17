@@ -32,7 +32,7 @@ export function defaultDraft(slots: Slot[], now: number): Draft {
  */
 export function parse(text: string, slots: Slot[], now: number): Draft {
   const draft = defaultDraft(slots, now);
-  const lower = text.toLowerCase();
+  const lower = text.toLowerCase().replace(/’/g, "'");
   const cut: [number, number][] = [];
   const found: Found = {};
 
