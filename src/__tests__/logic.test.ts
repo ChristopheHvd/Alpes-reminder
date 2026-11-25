@@ -83,7 +83,7 @@ describe('snoozeOptions', () => {
   it('offers delays, remaining slots and tomorrow morning', () => {
     const o = snoozeOptions(slots, NOW);
     expect(o.map((x) => x.label)).toEqual(['Dans 15 min', 'Dans 1 h', 'Midi', 'Soir', 'Demain matin']);
-    expect(o[4].when).toBe(d(18, 8));
+    expect(o[4].when).toBe(d(18, 9));
   });
 });
 
@@ -91,7 +91,7 @@ describe('parse', () => {
   it('tomorrow morning', () => {
     const p = parse('Appeler le comptable demain matin', slots, NOW);
     expect(p.title).toBe('Appeler le comptable');
-    expect(at(p.day, p.time)).toBe(d(18, 8));
+    expect(at(p.day, p.time)).toBe(d(18, 9));
     expect(p.repeat).toBe('once');
   });
   it('specific days with an hour', () => {
@@ -110,7 +110,7 @@ describe('parse', () => {
     const p = parse('Prendre les vitamines tous les matins', slots, NOW);
     expect(p.title).toBe('Prendre les vitamines');
     expect(p.repeat).toBe('daily');
-    expect(p.time).toBe('08:00');
+    expect(p.time).toBe('09:00');
   });
   it('monthly and relative delay', () => {
     expect(parse('payer le loyer chaque mois', slots, NOW).repeat).toBe('monthly');
@@ -135,5 +135,13 @@ describe('voice phrasing', () => {
     expect(p.time).toBe('19:00');
     expect(p.day.getTime()).toBe(new Date(2026, 10, 17).getTime());
     expect(p.repeat).toBe('once');
+  });
+});
+
+describe('morning dictation', () => {
+  it.each(["Rappelle-moi d'appeler le coiffeur demain matin", 'rappelle-moi d appeler le coiffeur demain matin'])('%s', (t) => {
+    const p = parse(t, DEFAULT_SLOTS, NOW);
+    expect(p.title).toBe('Appeler le coiffeur');
+    expect(at(p.day, p.time)).toBe(d(18, 9));
   });
 });

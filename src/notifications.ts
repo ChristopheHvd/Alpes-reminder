@@ -60,7 +60,16 @@ export async function syncNotifications(state: State): Promise<void> {
 }
 
 export function payloadOf(response: Notifications.NotificationResponse): (Payload & { notificationId: string }) | null {
-  const data = response.notification.request.content.data as Partial<Payload> | undefined;
+  // In the Android background task the payload is raw: local notification data arrives as a JSON string.
+  const content = response.notification.request.content as Notifications.NotificationContent & { dataString?: string };
+  let data = content.data as Partial<Payload> | undefined;
+  if (!data?.reminderId && content.dataString) {
+    try {
+      data = JSON.parse(content.dataString);
+    } catch {
+      return null;
+    }
+  }
   if (!data?.reminderId || typeof data.at !== 'number') return null;
   return { reminderId: data.reminderId, at: data.at, notificationId: response.notification.request.identifier };
 }

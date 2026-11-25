@@ -27,10 +27,10 @@ export type Completion = {
   prevDue: number;
 };
 
-export type State = { reminders: Reminder[]; slots: Slot[]; log: Completion[] };
+export type State = { reminders: Reminder[]; slots: Slot[]; log: Completion[]; version?: number };
 
 export const DEFAULT_SLOTS: Slot[] = [
-  { id: 'matin', name: 'Matin', time: '08:00' },
+  { id: 'matin', name: 'Matin', time: '09:00' },
   { id: 'midi', name: 'Midi', time: '12:30' },
   { id: 'soir', name: 'Soir', time: '19:00' },
 ];

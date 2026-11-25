@@ -3,7 +3,7 @@ import { Figtree_400Regular, Figtree_500Medium, Figtree_600SemiBold, useFonts } 
 import * as Notifications from 'expo-notifications';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, AppState, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Animated, AppState, Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Completion, Reminder, State, dayLabel, fmtTime, firstDue, makeRepeat, newId, repeatLabel, timeOf, undo } from './src/model';
 import { ACTION_DONE, ACTION_SNOOZE, applyDone, payloadOf, setupNotifications, syncNotifications } from './src/notifications';
@@ -14,6 +14,8 @@ import { EditSheet, EditTarget } from './src/ui/EditSheet';
 import { Check, Chevron, ClockIcon, MicIcon } from './src/ui/parts';
 import { SlotsScreen } from './src/ui/SlotsScreen';
 import { SnoozeSheet } from './src/ui/SnoozeSheet';
+
+const VOICE_LINK = 'rappels://dicter';
 
 function whenLabel(t: number): string {
   const label = dayLabel(t, Date.now());
@@ -109,9 +111,19 @@ function Main() {
       setState(fresh);
       syncNotifications(fresh).catch(() => {});
     });
+    // Launched as the Android assistant: go straight to dictation.
+    const openVoice = (url?: string | null) => {
+      if (url !== VOICE_LINK) return;
+      setScreen('list');
+      setSnoozing(null);
+      setEdit({ mode: 'voice' });
+    };
+    Linking.getInitialURL().then(openVoice);
+    const link = Linking.addEventListener('url', (e) => openVoice(e.url));
     const tick = setInterval(() => setNow(Date.now()), 30000);
     return () => {
       sub.remove();
+      link.remove();
       app.remove();
       clearInterval(tick);
     };

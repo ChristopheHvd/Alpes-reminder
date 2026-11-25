@@ -47,7 +47,7 @@ export function parse(text: string, slots: Slot[], now: number): Draft {
     }
   };
 
-  take(/^(rappelle[- ]moi|n'oublie pas|il faut)\s+(de |d'|que )?/, () => {});
+  take(/^(rappelle[- ]?moi|n'oublie pas|il faut|pense à)\s+(de |d'|d |qu'il faut |que |à )?/, () => {});
 
   // Repeat rules
   take(new RegExp(`\\b(?:chaque|tous les|le)\\s+((?:${DAY_RE})s?(?:\\s*(?:,|et)\\s*(?:le\\s+)?(?:${DAY_RE})s?)*)\\b`), (m) => {

@@ -2,6 +2,7 @@
   "expo": {
     "name": "Rappels",
     "slug": "rappels",
+    "scheme": "rappels",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -30,6 +31,7 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
+      "./plugins/with-assistant",
       "@react-native-community/datetimepicker",
       "expo-font",
       [
